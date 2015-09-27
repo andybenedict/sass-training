@@ -1,0 +1,139 @@
+$font: 'Helvetica', sans-serif;
+$header-font: $font;
+$brand-primary: #519abf;
+$grey: #777777;
+$margin: .5em;
+$base-font-size: 16px;
+$font-ratio: .15;
+$col-sm: 900px;
+
+@function math-pow($number, $exp) {
+    $value: 1;
+    
+    @if $exp > 0 {
+        @for $i from 1 through $exp {
+           $value: $value * $number;
+        }
+    }
+    @else if $exp < 0 {
+        @for $i from 1 through -$exp {
+            $value: $value / $number;
+        }
+    }
+
+    @return $value;
+}
+
+@mixin font-scale($number){
+    @if $number == 0 {
+    }
+    @else if $number < 0 {
+        font-size: math-pow(1-($font-ratio), -$number) * 1em;
+    }
+    @else {
+        font-size: math-pow(1+$font-ratio, $number) * 1em;
+    }
+}
+
+@mixin col {
+  display: block;
+  float: left;
+  padding: 0 15px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: {
+    family: $font;
+    size: $base-font-size;
+  }
+}
+
+%header {
+  font: {
+    weight: bold;
+    @if $header-font != $font {
+      family: $header-font;
+    }
+  }
+  color: $brand-primary;
+  margin: $margin 0;
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    @extend %header;
+    @include font-scale(7-$i);
+  }
+}
+
+p {
+  margin: $margin 0;
+}
+
+a {
+  color: $brand-primary;
+  
+  &:hover {
+    color: $brand-primary * .75;
+  }
+}
+
+/* Responsive Grid */
+
+@for $i from 1 through 12 {
+  %col-xs-#{$i} {
+    @include col;
+    width: $i * (100% / 12);
+  }
+}
+
+@media (min-width: $col-sm) {
+  @for $i from 1 through 12 {
+    %col-sm-#{$i} {
+      @include col;
+      width: $i * (100% / 12);
+    }
+  }
+}
+
+/* Form */
+
+form {
+  width: 100%;
+  display: block;
+  clear: both;
+}
+
+label {
+  display: block;
+  text-transform: uppercase;
+  color: $grey;
+  @include font-scale(-1);
+  width: 100%;
+}
+
+input {
+  display: block;
+  width: 100%;
+}
+
+.field {
+  @extend %col-xs-12;
+  @extend %col-sm-6;
+  margin: $margin 0;
+  
+  &.state {
+    @extend %col-xs-8;
+    @extend %col-sm-4;
+  }
+  
+  &.zip {
+    @extend %col-xs-4;
+    @extend %col-sm-2;
+  }
+
+}
